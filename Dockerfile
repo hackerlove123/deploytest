@@ -21,8 +21,5 @@ ENV NGROK_AUTHTOKEN=2smPryBZ3VUFV5PWVpsSHu1ZYkV_6QNsSst6k9UcUnM59Tkw9
 RUN mkdir -p /root/.config/ngrok && \
     echo "authtoken: $NGROK_AUTHTOKEN" > /root/.config/ngrok/ngrok.yml
 
-# Mở tunnel cho cổng 8082
-RUN python3 -c "from pyngrok import ngrok; public_url = ngrok.connect(8082); print('Public URL:', public_url)"
-
-# Chạy code-server
-CMD code-server --bind-addr 0.0.0.0:8082 --auth none
+# Mở tunnel cho cổng 8082 thông qua lệnh CMD thay vì RUN trong quá trình build
+CMD /bin/bash -c "ngrok http 8082 & code-server --bind-addr 0.0.0.0:8082 --auth none"
